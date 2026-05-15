@@ -78,6 +78,44 @@ npm run test
 npm run build
 ```
 
+## Docker Quick Start
+
+Run the development app through Docker:
+
+```bash
+docker compose up app
+```
+
+Open:
+
+```text
+http://localhost:5173
+```
+
+Run the full Dockerized QA gate:
+
+```bash
+docker compose run --rm qa
+```
+
+Run a production preview:
+
+```bash
+docker compose --profile preview up preview --build
+```
+
+Open:
+
+```text
+http://localhost:8080
+```
+
+For the full Docker testing workflow, see:
+
+```text
+docs/qa/docker-qc-workflow.md
+```
+
 ## Reproducible CI Installs
 
 The repository commits `package-lock.json` so automated validation can install the exact dependency tree with:
@@ -118,4 +156,10 @@ Reproducible CI hardening is tracked in Issue #4:
 
 ```text
 https://github.com/Aggredicus/PermaSurvey-FlightOps/issues/4
+```
+
+Dockerized QA and preview workflow is tracked in Issue #7:
+
+```text
+https://github.com/Aggredicus/PermaSurvey-FlightOps/issues/7
 ```
