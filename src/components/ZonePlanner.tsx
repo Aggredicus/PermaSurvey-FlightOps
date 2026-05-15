@@ -44,6 +44,10 @@ const emptyRequirementDraft: EvidenceRequirementDraft = {
   status: 'missing',
 };
 
+function formatOptionLabel(value: string): string {
+  return value.replace(/_/g, ' ');
+}
+
 export function ZonePlanner({
   project,
   onEvidenceStatusChange,
@@ -183,7 +187,7 @@ export function ZonePlanner({
                           })
                         }
                       >
-                        {evidenceTypes.map((type) => <option value={type} key={type}>{type.replaceAll('_', ' ')}</option>)}
+                        {evidenceTypes.map((type) => <option value={type} key={type}>{formatOptionLabel(type)}</option>)}
                       </select>
                     </label>
                     <label>
@@ -199,7 +203,7 @@ export function ZonePlanner({
                         }
                       >
                         {evidenceStatuses.map((status) => (
-                          <option value={status} key={status}>{status.replaceAll('_', ' ')}</option>
+                          <option value={status} key={status}>{formatOptionLabel(status)}</option>
                         ))}
                       </select>
                     </label>
@@ -225,7 +229,7 @@ export function ZonePlanner({
                         updateRequirementDraft(zone.zone_id, { evidence_type: event.target.value as EvidenceType })
                       }
                     >
-                      {evidenceTypes.map((type) => <option value={type} key={type}>{type.replaceAll('_', ' ')}</option>)}
+                      {evidenceTypes.map((type) => <option value={type} key={type}>{formatOptionLabel(type)}</option>)}
                     </select>
                   </label>
                   <label>
@@ -236,7 +240,7 @@ export function ZonePlanner({
                         updateRequirementDraft(zone.zone_id, { status: event.target.value as EvidenceStatus })
                       }
                     >
-                      {evidenceStatuses.map((status) => <option value={status} key={status}>{status.replaceAll('_', ' ')}</option>)}
+                      {evidenceStatuses.map((status) => <option value={status} key={status}>{formatOptionLabel(status)}</option>)}
                     </select>
                   </label>
                 </div>
