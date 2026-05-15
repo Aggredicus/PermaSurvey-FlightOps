@@ -34,7 +34,12 @@ jobs:
 
       - name: Commit generated lockfile
         run: |
-          if git diff --quiet -- package-lock.json; then
+          if [ ! -f package-lock.json ]; then
+            echo "package-lock.json was not generated"
+            exit 1
+          fi
+
+          if [ -z "$(git status --porcelain -- package-lock.json)" ]; then
             echo "package-lock.json already committed"
           else
             git config user.name "github-actions[bot]"
