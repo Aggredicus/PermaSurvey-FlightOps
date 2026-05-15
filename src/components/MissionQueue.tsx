@@ -10,6 +10,10 @@ interface MissionQueueProps {
 
 const missionStatuses: MissionStatus[] = ['planned', 'ready', 'in_progress', 'complete', 'needs_refly', 'skipped'];
 
+function formatStatus(value: string): string {
+  return value.replace(/_/g, ' ');
+}
+
 export function MissionQueue({
   project,
   selectedMissionId,
@@ -33,7 +37,7 @@ export function MissionQueue({
               onClick={() => onSelectMission(mission.mission_id)}
             >
               <span>{mission.name}</span>
-              <small>{mission.status.replaceAll('_', ' ')}</small>
+              <small>{formatStatus(mission.status)}</small>
             </button>
           ))}
         </div>
@@ -70,7 +74,7 @@ function FlightCard({ mission, project, onMissionStatusChange, onChecklistToggle
           <p className="eyebrow">Flight card</p>
           <h3>{mission.name}</h3>
         </div>
-        <span className="status-pill">{mission.status.replaceAll('_', ' ')}</span>
+        <span className="status-pill">{formatStatus(mission.status)}</span>
       </div>
       <p>{mission.purpose}</p>
       <dl className="compact-details">
@@ -83,7 +87,7 @@ function FlightCard({ mission, project, onMissionStatusChange, onChecklistToggle
         Mission status
         <select value={mission.status} onChange={(event) => onMissionStatusChange(mission.mission_id, event.target.value as MissionStatus)}>
           {missionStatuses.map((status) => (
-            <option value={status} key={status}>{status.replaceAll('_', ' ')}</option>
+            <option value={status} key={status}>{formatStatus(status)}</option>
           ))}
         </select>
       </label>
