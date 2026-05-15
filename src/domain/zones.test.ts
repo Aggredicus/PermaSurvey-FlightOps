@@ -13,7 +13,7 @@ describe('zone editing helpers', () => {
   it('adds a design zone while preserving fleet-ready project arrays', () => {
     const updated = addDesignZone(sampleProject, {
       name: 'Kitchen Garden',
-      description: 'Near-house intensive annual and herb production area.',
+      description: 'Near-house annual and herb production area.',
       priority: 'medium',
       tags: ['kitchen', 'annuals'],
     });
@@ -41,14 +41,15 @@ describe('zone editing helpers', () => {
 
   it('adds an evidence requirement to a zone', () => {
     const updated = addEvidenceRequirement(sampleProject, 'zone_orchard_planning', {
-      label: 'Low-angle access path video',
+      label: 'Access path context video',
       evidence_type: 'transect_video',
       status: 'missing',
     });
 
     const zone = updated.zones.find((item) => item.zone_id === 'zone_orchard_planning');
-    const lastRequirement = zone?.required_evidence[(zone.required_evidence.length ?? 1) - 1];
-    expect(lastRequirement?.label).toBe('Low-angle access path video');
+    const requirements = zone?.required_evidence ?? [];
+    const lastRequirement = requirements[requirements.length - 1];
+    expect(lastRequirement?.label).toBe('Access path context video');
   });
 
   it('updates an evidence requirement', () => {
