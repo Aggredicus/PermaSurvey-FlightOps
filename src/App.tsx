@@ -8,7 +8,9 @@ import { ExportCenter } from './components/ExportCenter';
 import { recordProjectEvent } from './domain/chronicle';
 import { updateRequirementStatus } from './domain/evidence';
 import { toggleChecklistItem, updateMissionStatus } from './domain/missions';
-import type { EvidenceStatus, MissionStatus, SurveyProject } from './domain/types';
+import type { EvidenceRequirementDraft, ZoneDraft } from './domain/zones';
+import { addDesignZone, addEvidenceRequirement, updateDesignZone, updateEvidenceRequirement } from './domain/zones';
+import type { EvidenceStatus, ExportArtifact, MissionStatus, Site, SurveyProject } from './domain/types';
 import { loadProject, resetProject, saveProject } from './storage/projectStorage';
 
 export default function App() {
@@ -28,15 +30,21 @@ export default function App() {
     setProject(nextProject);
   }
 
-  function handleSiteChange(sitePatch: Partial<SurveyProject['site']>) {
+  function handleSiteSave(sitePatch: Partial<Site>) {
+    const changedFields = Object.keys(sitePatch).filter(
+      (key) => project.site[key as keyof Site] !== sitePatch[key as keyof Site],
+    );
+
+    if (changedFields.length === 0) return;
+
     const nextProject = recordProjectEvent(
       {
         ...project,
         updated_at: new Date().toISOString(),
         site: { ...project.site, ...sitePatch },
       },
-      'correction_recorded',
-      { changed_fields: Object.keys(sitePatch) },
+      'site_updated',
+      { changed_fields: changedFields },
       { type: 'site', id: project.site.site_id },
     );
     updateProject(nextProject);
@@ -75,6 +83,65 @@ export default function App() {
     updateProject(nextProject);
   }
 
+  function handleAddZone(draft: ZoneDraft) {
+    const nextProject = recordProjectEvent(
+      addDesignZone(project, draft),
+      'zone_created',
+      { name: draft.name, priority: draft.priority },
+      { type: 'site', id: project.site.site_id },
+    );
+    updateProject(nextProject);
+  }
+
+  function handleUpdateZone(zoneId: string, patch: Partial<ZoneDraft>) {
+    const nextProject = recordProjectEvent(
+      updateDesignZone(project, zoneId, patch),
+      'zone_updated',
+      { changed_fields: Object.keys(patch) },
+      { type: 'design_zone', id: zoneId },
+    );
+    updateProject(nextProject);
+  }
+
+  function handleAddEvidenceRequirement(zoneId: string, draft: EvidenceRequirementDraft) {
+    const nextProject = recordProjectEvent(
+      addEvidenceRequirement(project, zoneId, draft),
+      'evidence_requirement_created',
+      { label: draft.label, evidence_type: draft.evidence_type, status: draft.status },
+      { type: 'design_zone', id: zoneId },
+    );
+    updateProject(nextProject);
+  }
+
+  function handleUpdateEvidenceRequirement(
+    zoneId: string,
+    requirementId: string,
+    patch: Partial<EvidenceRequirementDraft>,
+  ) {
+    const nextProject = recordProjectEvent(
+      updateEvidenceRequirement(project, zoneId, requirementId, patch),
+      'evidence_requirement_updated',
+      { requirement_id: requirementId, changed_fields: Object.keys(patch) },
+      { type: 'design_zone', id: zoneId },
+    );
+    updateProject(nextProject);
+  }
+
+  function handleExportGenerated(artifact: ExportArtifact) {
+    const nextProject = recordProjectEvent(
+      project,
+      'export_generated',
+      {
+        artifact_id: artifact.id,
+        label: artifact.label,
+        filename: artifact.filename,
+        mime_type: artifact.mime_type,
+      },
+      { type: 'export_artifact', id: artifact.id },
+    );
+    updateProject(nextProject);
+  }
+
   function handleResetDemo() {
     const nextProject = resetProject();
     setProject(nextProject);
@@ -95,11 +162,18 @@ export default function App() {
       <SiteCommandCenter project={project} onResetDemo={handleResetDemo} />
 
       <section className="grid two-column">
-        <SiteSetupForm site={project.site} onChange={handleSiteChange} />
-        <ExportCenter project={project} />
+        <SiteSetupForm site={project.site} onSave={handleSiteSave} />
+        <ExportCenter project={project} onExportGenerated={handleExportGenerated} />
       </section>
 
-      <ZonePlanner project={project} onEvidenceStatusChange={handleEvidenceStatus} />
+      <ZonePlanner
+        project={project}
+        onEvidenceStatusChange={handleEvidenceStatus}
+        onAddZone={handleAddZone}
+        onUpdateZone={handleUpdateZone}
+        onAddEvidenceRequirement={handleAddEvidenceRequirement}
+        onUpdateEvidenceRequirement={handleUpdateEvidenceRequirement}
+      />
 
       <MissionQueue
         project={project}
