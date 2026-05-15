@@ -24,11 +24,15 @@ export type EvidenceType =
 
 export type ChronicleEventType =
   | 'site_created'
+  | 'site_updated'
   | 'zone_created'
+  | 'zone_updated'
   | 'mission_created'
   | 'mission_started'
   | 'mission_completed'
   | 'mission_status_changed'
+  | 'evidence_requirement_created'
+  | 'evidence_requirement_updated'
   | 'evidence_marked_complete'
   | 'evidence_marked_partial'
   | 'evidence_missing_added'
