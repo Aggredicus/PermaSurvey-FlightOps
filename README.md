@@ -19,25 +19,81 @@ The core goal is to help a designer leave every site with complete, organized, W
 Plan → Fly manually → Verify evidence → Capture gaps → Export → Process → Design
 ```
 
-## Initial Scope
+## v0.1 Foundation
 
-The first implementation should establish the v0.1 foundation:
+The first implementation establishes:
 
-- TypeScript frontend scaffold
+- Vite + React + TypeScript frontend scaffold
 - mobile-first field dashboard
 - fleet-ready data model using `fleet[]`, `operators[]`, and `missions[]`
-- site/project setup
-- design zones
+- site/project setup form
+- design zones and evidence requirements
 - one-drone manual mission queue
 - flight cards and field checklists
 - evidence QA / missing-evidence-before-departure list
-- immutable chronicle events
+- immutable chronicle events for major actions
+- local-first save/load through a storage abstraction
 - JSON/Markdown/WebODM handoff exports
+- Vitest coverage for core domain helpers and exporters
 
 ## Safety Boundary
 
 This repository is for field operations planning and evidence management. It must not implement or imply autonomous drone control, single-pilot multi-drone control, beyond-visual-line-of-sight operation, or swarm behavior.
 
-## Status
+Use language like:
 
-Repository initialized. A feature request issue should guide the first implementation sprint.
+- manual flight
+- survey mission card
+- capture checklist
+- field evidence verification
+- WebODM handoff
+
+Avoid language like:
+
+- autonomous control
+- swarm control
+- single-pilot multi-drone control
+- automatic drone operation
+
+## Local Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Run checks:
+
+```bash
+npm run typecheck
+npm run lint
+npm run test
+npm run build
+```
+
+## Project Structure
+
+```text
+src/
+  components/      Mobile-first dashboard sections
+  data/            Sample survey project
+  domain/          Typed project model and workflow helpers
+  export/          JSON, Markdown, and WebODM manifest exporters
+  storage/         Local project persistence abstraction
+  test/            Vitest setup
+```
+
+## Issue Tracking
+
+Initial setup is tracked in Issue #1:
+
+```text
+https://github.com/Aggredicus/PermaSurvey-FlightOps/issues/1
+```
