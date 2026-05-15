@@ -18,8 +18,9 @@ describe('zone editing helpers', () => {
       tags: ['kitchen', 'annuals'],
     });
 
+    const lastZone = updated.zones[updated.zones.length - 1];
     expect(updated.zones).toHaveLength(sampleProject.zones.length + 1);
-    expect(updated.zones.at(-1)?.name).toBe('Kitchen Garden');
+    expect(lastZone?.name).toBe('Kitchen Garden');
     expect(Array.isArray(updated.fleet)).toBe(true);
     expect(Array.isArray(updated.operators)).toBe(true);
     expect(Array.isArray(updated.missions)).toBe(true);
@@ -46,7 +47,8 @@ describe('zone editing helpers', () => {
     });
 
     const zone = updated.zones.find((item) => item.zone_id === 'zone_orchard_planning');
-    expect(zone?.required_evidence.at(-1)?.label).toBe('Low-angle access path video');
+    const lastRequirement = zone?.required_evidence[(zone.required_evidence.length ?? 1) - 1];
+    expect(lastRequirement?.label).toBe('Low-angle access path video');
   });
 
   it('updates an evidence requirement', () => {
