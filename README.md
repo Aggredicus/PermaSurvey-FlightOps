@@ -57,7 +57,7 @@ Avoid language like:
 
 ## Local Development
 
-Install dependencies:
+Install dependencies for local development:
 
 ```bash
 npm install
@@ -78,9 +78,15 @@ npm run test
 npm run build
 ```
 
-## Dependency Lockfile Note
+## Reproducible CI Installs
 
-This early scaffold currently uses `npm install` in CI until the first real `package-lock.json` is generated locally. After running `npm install`, commit the generated `package-lock.json` and switch CI to `npm ci` for reproducible installs.
+The repository commits `package-lock.json` so automated validation can install the exact dependency tree with:
+
+```bash
+npm ci
+```
+
+GitHub Actions uses `npm ci`, then runs typecheck, lint, tests, and production build.
 
 ## Project Structure
 
@@ -106,4 +112,10 @@ Quality patch tracking is in Issue #3:
 
 ```text
 https://github.com/Aggredicus/PermaSurvey-FlightOps/issues/3
+```
+
+Reproducible CI hardening is tracked in Issue #4:
+
+```text
+https://github.com/Aggredicus/PermaSurvey-FlightOps/issues/4
 ```
