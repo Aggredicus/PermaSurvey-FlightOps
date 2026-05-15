@@ -46,6 +46,7 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add package-lock.json
             git commit -m "Add package lockfile"
+            git pull --rebase origin quality/4-lockfile-reproducible-ci
             git push
           fi
 
