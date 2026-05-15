@@ -78,6 +78,10 @@ npm run test
 npm run build
 ```
 
+## Dependency Lockfile Note
+
+This early scaffold currently uses `npm install` in CI until the first real `package-lock.json` is generated locally. After running `npm install`, commit the generated `package-lock.json` and switch CI to `npm ci` for reproducible installs.
+
 ## Project Structure
 
 ```text
@@ -96,4 +100,10 @@ Initial setup is tracked in Issue #1:
 
 ```text
 https://github.com/Aggredicus/PermaSurvey-FlightOps/issues/1
+```
+
+Quality patch tracking is in Issue #3:
+
+```text
+https://github.com/Aggredicus/PermaSurvey-FlightOps/issues/3
 ```
