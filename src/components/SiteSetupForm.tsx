@@ -1,52 +1,72 @@
+import { useEffect, useState } from 'react';
 import type { Site } from '../domain/types';
 
 interface SiteSetupFormProps {
   site: Site;
-  onChange: (sitePatch: Partial<Site>) => void;
+  onSave: (sitePatch: Partial<Site>) => void;
 }
 
-export function SiteSetupForm({ site, onChange }: SiteSetupFormProps) {
+export function SiteSetupForm({ site, onSave }: SiteSetupFormProps) {
+  const [draft, setDraft] = useState<Site>(site);
+
+  useEffect(() => {
+    setDraft(site);
+  }, [site]);
+
+  function updateDraft(sitePatch: Partial<Site>) {
+    setDraft((current) => ({ ...current, ...sitePatch }));
+  }
+
   return (
     <section className="panel" aria-labelledby="site-setup-title">
       <p className="eyebrow">Site setup</p>
       <h2 id="site-setup-title">Survey project</h2>
+      <p className="subtle-note">Edits are drafted locally and recorded as one chronicle event when saved.</p>
       <div className="form-grid">
         <label>
           Site name
-          <input value={site.name} onChange={(event) => onChange({ name: event.target.value })} />
+          <input value={draft.name} onChange={(event) => updateDraft({ name: event.target.value })} />
         </label>
         <label>
           Client
-          <input value={site.client_name} onChange={(event) => onChange({ client_name: event.target.value })} />
+          <input value={draft.client_name} onChange={(event) => updateDraft({ client_name: event.target.value })} />
         </label>
         <label>
           Location label
-          <input value={site.location_label} onChange={(event) => onChange({ location_label: event.target.value })} />
+          <input value={draft.location_label} onChange={(event) => updateDraft({ location_label: event.target.value })} />
         </label>
         <label>
           Survey date
-          <input type="date" value={site.survey_date} onChange={(event) => onChange({ survey_date: event.target.value })} />
+          <input type="date" value={draft.survey_date} onChange={(event) => updateDraft({ survey_date: event.target.value })} />
         </label>
         <label className="full-span">
           Survey goal
-          <textarea value={site.survey_goal} onChange={(event) => onChange({ survey_goal: event.target.value })} />
+          <textarea value={draft.survey_goal} onChange={(event) => updateDraft({ survey_goal: event.target.value })} />
         </label>
         <label className="full-span">
           Field notes
-          <textarea value={site.notes} onChange={(event) => onChange({ notes: event.target.value })} />
+          <textarea value={draft.notes} onChange={(event) => updateDraft({ notes: event.target.value })} />
         </label>
         <label className="full-span">
           Hazards notes
-          <textarea value={site.hazards_notes ?? ''} onChange={(event) => onChange({ hazards_notes: event.target.value })} />
+          <textarea value={draft.hazards_notes ?? ''} onChange={(event) => updateDraft({ hazards_notes: event.target.value })} />
         </label>
         <label className="full-span">
           No-fly / no-photo notes
-          <textarea value={site.no_fly_no_photo_notes ?? ''} onChange={(event) => onChange({ no_fly_no_photo_notes: event.target.value })} />
+          <textarea value={draft.no_fly_no_photo_notes ?? ''} onChange={(event) => updateDraft({ no_fly_no_photo_notes: event.target.value })} />
         </label>
         <label className="full-span">
           Launch / landing notes
-          <textarea value={site.launch_landing_notes ?? ''} onChange={(event) => onChange({ launch_landing_notes: event.target.value })} />
+          <textarea value={draft.launch_landing_notes ?? ''} onChange={(event) => updateDraft({ launch_landing_notes: event.target.value })} />
         </label>
+      </div>
+      <div className="button-row">
+        <button className="primary-button" type="button" onClick={() => onSave(draft)}>
+          Save site changes
+        </button>
+        <button className="secondary-button" type="button" onClick={() => setDraft(site)}>
+          Revert draft
+        </button>
       </div>
     </section>
   );
